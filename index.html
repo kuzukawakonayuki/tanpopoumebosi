@@ -3,72 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <title>TEST</title>
+</head>
+
+<body onload="main()">
+
+<p>TEST</p>
+<div class = "main_canvas" style "position: relative;">
+    <canvas id="cv1" width="500" height="380" style="position: absolute;"></canvas>
+    <canvas id="cv2" width="500" height="380" style="position: absolute;"></canvas>
+</div>
+    
 <script>
     var bg = new Image();
     var title = new Image();
+    var title_draw = new Image();
     var husumaR = new Image();
     var husumaR_draw
     var husumaR_x = -250;
     var husumaL = new Image();
     var husumaL_draw
     var husumaL_x = 500;
-    var husuma_kai_timer;
-    var husuma_hei_timer;
+    var husuma_kaihei_timer;
+    var clear_a;
+    var clear_b;
+    var game_scene = 0;
+    var loop_ct = 0;
     bg.src = "sozai/tatami.jpg";  
     title.src = "sozai/title.jpg";
     husumaR.src = "sozai/husumaR.jpg";
     husumaL.src = "sozai/husumaL.jpg";
-  </script>
-</head>
 
-<body onload="main()">
-<p>TEST</p>
-
-    <canvas id="cv1" width="500" height="380"></canvas>
-    
-    <script>
     function main()
     {
         var bg_draw = document.getElementById("cv1").getContext("2d");
         var title_draw = document.getElementById("cv1").getContext("2d");
-        var husumaR_draw = document.getElementById("cv1").getContext("2d");
-        var husumaL_draw = document.getElementById("cv1").getContext("2d");
+        var husumaR_draw = document.getElementById("cv2").getContext("2d");
+        var husumaL_draw = document.getElementById("cv2").getContext("2d");
         bg_draw.drawImage(bg,0,0);
         title_draw.drawImage(title,0,0);
         husumaR_draw.drawImage(husumaR,husumaR_x,0);
         husumaL_draw.drawImage(husumaL,husumaL_x,0);
-        husuma_hei_timer = setInterval(husuma_hei,50);
+        document.addEventListener("keydown", SpaceKeyDown);
+
+        function SpaceKeyDown(e)
+        {
+            console.log("keydown")
+            if ( e.keyCode == 32 ) 
+            {
+                if ( game_scene == 0 )
+                {
+                    loop_ct = 0;
+                    husuma_kaihei_timer = setInterval(husuma_hei,1);
+                    game_scene++;
+                } else if ( game_scene == 1) {
+
+                }
+            } else {
+                
+            }
+        }
 
         function husuma_hei()
         {
-            if (husumaR_x < 0)
+            if (loop_ct < 250 && husumaR_x < 0)
             {
-                husumaR_x++;
-                husumaL_x--;
+                husumaR_x = husumaR_x + 1;
+                husumaL_x = husumaL_x - 1;
                 husumaR_draw.drawImage(husumaR,husumaR_x,0);
                 husumaL_draw.drawImage(husumaL,husumaL_x,0);
-            } else {
-                clearInterval(husuma_hei_timer);
+                
             }
-        }
-
-        function husuma_kai()
-        {
-            if (husumaL_x < 500)
+            else if (loop_ct > 300 && husumaL_x < 500)
             {
-                husumaR_x--;
-                husumaL_x++;
+                husumaR_x = husumaR_x - 1;
+                husumaL_x = husumaL_x + 1;
+                clear_a = husumaR_x + 250 ;
+                clear_b = husumaL_x;
+                husumaR_draw.clearRect(clear_a,0,clear_b,380);
+                title_draw.drawImage(bg,0,0);
                 husumaR_draw.drawImage(husumaR,husumaR_x,0);
                 husumaL_draw.drawImage(husumaL,husumaL_x,0);
-            } else {
-                clearInterval(husuma_kai_timer);
             }
+            else if (loop_ct > 750) 
+            {
+                clearInterval(husuma_kaihei_timer);
+            }
+            else
+            {
 
+            }
+            loop_ct++;
+            console.log(loop_ct);
         }
 
     }
-    </script>
-    <input type="button" value="START" id="start_button" onclick="start_button_click()">
+
+</script>
 </body>
 
 </html>
